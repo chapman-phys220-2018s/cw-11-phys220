@@ -1,42 +1,45 @@
 # PHYS220 CW 11 
 
-**Author(s):** _\<your name(s)\>_
+**Author(s):** **CHANGEME**
 
-[![Build Status](https://travis-ci.org/chapman-phys220-2016f/cw-11-YOURNAME.svg?branch=master)](https://travis-ci.org/chapman-phys220-2016f/cw-11-YOURNAME)
-
-**Due date:** 2016/11/15
+[![Build Status](https://travis-ci.org/chapman-phys220-2017f/cw-11-YOURNAME.svg?branch=master)](https://travis-ci.org/chapman-phys220-2017f/cw-11-YOURNAME)
 
 ## Specification
 
-**Reminder: We have switched to Python3 officially.**
+Consider a first-order ordinary differential equation (ODE) $$u'(t) = f[t, u(t)]$$ For concrete examples, consider $u'(t) = 2 u(t)$, or $u'(t) = 2t^2u(t)$. Such an equation states that the function $f[t, u(t)]$ is the slope of $u(t)$ at the domain point $t$; to calculate this slope, one generally needs to know both the range value $u(t)$ as well as the domain point $t$. The usual task of solving such a differential equation is to start from an "initial condition" $u(t_0) = u_0$ and reconstruct what the entire function $u(t)$ must be for $t>t_0$. There are analytical methods for cleverly reconstructing such a solution (e.g., solving $u'(t) = 2u(t)$ yields $u(t) = u_0 \exp(2 t)$), but we are interesting here in how to numerically obtain a solution.
 
-For each of the following integration methods, discuss together on the white board to understand how they work for solving a first-order ordinary differential equation (ODE) $$u'(t) = f[t, u(t)]$$ on a discretized grid $(t_0, t_1, t_2, ..., t_N)$ with points $u_k = u(t_k)$ and grid spacing $\Delta t = t_{k+1} - t_k$. Write a notebook ```cw11-integration.ipynb``` that summarizes your conclusions and details what each method is doing.
+To construct a solution, we construct a discrete mesh of domain points $(t_0, t_1, t_2, ..., t_N)$ with uniform spacing $\Delta t = t_{k+1} - t_k$. Starting from the initial condition $u(t_0) = u_0$, we then iteratively construct a sequence of matching range points $(u_0, u_1, u_2, ..., u_N)$, where $u_k = u(t_k)$, by using the slopes $u'(t_k)$ at each domain point. This procedure is tricky for two reasons: (1) computing the slopes $u'(t_k)$ generally requires knowledge of the function $u(t_k)$ that one is trying to reconstruct, leading to a chicken-and-egg problem; (2) the first-derivative $u'(t_k)$ can only produce a linear approximations to $u(t)$ around the point $t_k$, so will only approximate $u(t)$ if $\Delta t$ is sufficiently small. To be more explicit about this latter reason, consider the Taylor expansion of $u(t)$ around a particular point $t_k$: $$u(t_k + s) = u(t_k) + u'(t_k)s + u''(t_k)s^2/2 + u'''(t_k)s^3/3! + ...$$ Generally one will need to know all higher-order derivatives of $u(t)$ at $t=t_k$ to reconstruct the function at the point $t_k + s$. However, if $s=\Delta t$ is small, then one can approximate $(\Delta t)^2 \approx 0$, yielding $u(t_k + \Delta t) = u(t_k) + u'(t_k)\Delta t$. Thus, if one knows the slope $u'(t_k) = f[t_k, u(t_k)]$, then one obtains $u_{k+1} = u_k + \Delta t\, f[t_k, u_k]$, which allows one to obtain the next range point $u_{k+1}$ given only knowledge of the current range point $u_k$. We say this method (called "Euler's method") for obtaining $u_{k+1}$ from $u_k$ is accurate to "1st-order in $\Delta t$", since the error of this approximation scales as $(\Delta t)^2$.
 
-1. Euler's Method: 
+This first-order method for obtaining the approximate sequence $(u_0, u_1, u_2, ..., u_N)$ of solution range points is not the only method. For example, consider the "Leapfrog Method" as an alternative. With this method, one starts from the point $t_k$, then looks both forward one point and backward one point. The Taylor expansion for each yields $u(t_k + \Delta t) = u_{k+1} = u_k + u'(t_k)\Delta t + u''(t_k)(\Delta t)^2/2 + O(\Delta t)^3$ and $u(t_k - \Delta t) = u_{k-1} = u_k - u'(t_k)\Delta t + u''(t_k)(\Delta t)^2/2 + O(\Delta t)^3$, where $O(\Delta t)^3$ means terms of order $(\Delta t)^3$. Note that the second-order terms have the same sign, while the first-order terms have opposite sign. This means that if we take the difference of these two expansions, we get the relation: $$u_{k+1} - u_{k-1} = 2u'(t_k)\Delta t + O(\Delta t)^3$$
+That is, the second-order terms cancel entirely, leaving an expression that relates the next range point $u_{k+1}$ to the range point two steps back $u_{k-1}$ and the slope at the previous point $u'(t_k)$, with an error that scales as $(\Delta t)^3$ (making the method accurate to "second-order in $\Delta t$"). Since this method cancels out the second-order error terms, it will produce a more accurate approximation to the solution than Euler's method for finite mesh spacings $\Delta t$.
+
+The goal of this assignment is to understand what these solution methods are doing graphically, as well as several more methods outlined below. To do this, for each of the following iterative solution methods, discuss together on the white board to understand how they work. Draw an arbitrary function $u(t)$ to start. Outline a (reasonably coarse) mesh of domain points $(t_0, t_1, t_2, ...)$ and find the initial value $u_0 = u(t_0)$ on the graph. Explain to each other graphically what each method is doing to construct the sequence of range points $(u_0, u_1, u_2, ...)$. When you have reached a good understanding graphically on the board, try to explain in words what the method is doing. With your group, write a notebook ```cw11-odes.ipynb``` that summarizes your conclusions in words and details what each method is doing. (No need to draw graphs in the notebook.)
+
+1. Euler's Method (accurate to 1st-order):
    
-   $u_{k+1} = u_k + \Delta t\, f[t_k, u_k]$ 
-1. Leapfrog (Midpoint) Method: 
+   $u_{k+1} = u_k + \Delta t\, f[t_k, u_k]$
+1. Leapfrog (Midpoint) Method (accurate to 2nd-order):
    
-   $u_{k+1} = u_{k-1} + 2\Delta t\, f[t_k, u_k]$  
+   $u_{k+1} = u_{k-1} + 2\Delta t\, f[t_k, u_k]$
    
    (How do you compute $u_1$?)
-1. Heun's (Trapezoid) Method: 
+1. Heun's (Trapezoid) Method (accurate to 2nd-order):
    
    $\tilde{u}_{k+1} = u_k + \Delta t\, f[t_k, u_k]$, 
    
    $u_{k+1} = u_k + (\Delta t/2)(f[t_k, u_k] + f[t_{k+1}, \tilde{u}_{k+1}])$  
    
    (Note the two steps - what is each doing?)
-1. 2nd-order Runge-Kutta Method: 
+1. 2nd-order Runge-Kutta Method (accurate to 2nd-order):
    
-   $u_{k+1} = u_k + K_1$, 
+   $u_{k+1} = u_k + K_2$, 
    
    $K_1 = \Delta t\, f[t_k, u_k]$, 
    
    $K_2 = \Delta t\, f[t_k + \Delta t/2, u_k + K_1/2]$  
    
    (How does this differ from Heun's method?)
-1. 4th-order Runge-Kutta Method: 
+1. 4th-order Runge-Kutta Method (accurate to 4th-order):
    
    $u_{k+1} = u_k + (K_1 + 2K_2 + 2K_3 + K_4)/6$, 
    
@@ -50,7 +53,7 @@ For each of the following integration methods, discuss together on the white boa
    
    (Note that final increment is a weighted average of four different increments - what is each doing? Why do you suppose the middle increments are more heavily weighted?)
 
-In practice, the 4th-order Runge-Kutta method is the most popular method for integrating ODEs, since it nicely balances the precision per time step with the total number of required computations.
+In practice, the 4th-order Runge-Kutta method is the most popular method for solving ODEs numerically, since it nicely balances the accuracy per time step with the total number of required computations. It is usually more efficient to simply decrease the time step size rather than find methods of higher-order accuracy.
 
 ## Assessment
 
