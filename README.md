@@ -1,6 +1,6 @@
 # PHYS220 CW 11 
 
-**Author(s):** **CHANGEME**
+**Author(s):** **Daniel, Myranda, Devon**
 
 [![Build Status](https://travis-ci.org/chapman-phys220-2017f/cw-11-YOURNAME.svg?branch=master)](https://travis-ci.org/chapman-phys220-2017f/cw-11-YOURNAME)
 
@@ -70,4 +70,4 @@ I pledge that all the work in this repository is my own with only the following 
 
 Signed,
 
-**YOURNAME**
+**Devon Ball**
