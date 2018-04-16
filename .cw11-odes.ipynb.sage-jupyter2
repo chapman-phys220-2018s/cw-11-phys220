@@ -1,0 +1,8 @@
+{"type":"cell","id":"1a3ee0","pos":2,"input":"##### II. Leapfrog Method","cell_type":"markdown"}
+{"type":"cell","id":"27d674","pos":4,"input":"##### IV. Runge Kutta Method (to second order)","cell_type":"markdown"}
+{"type":"cell","id":"4705e1","pos":1,"input":"##### I. Euler's Method\nThis method is used to find the first order of an ordinary differentail equation given an initial starting point or value. Next, it is necessary to find the slope of than tangent line, and do this repeatedly until we have reached the desired value or time. Jumping to the next point is considered to be the \"step size\" and the step size can be either uniform or not uniform depending on the ODE in question.","cell_type":"markdown"}
+{"type":"cell","id":"48dd1c","pos":3,"input":"##### III. Heun's Method","cell_type":"markdown"}
+{"type":"cell","id":"887ff0","pos":5,"input":"##### V. Runge Kutta Method (to 4th order)","cell_type":"markdown"}
+{"type":"cell","id":"d0b3bd","pos":0,"input":"## CW 11\n\nDaniel, Devon, Myranda\nApril 2018","cell_type":"markdown"}
+{"type":"file","last_load":1523910153802}
+{"type":"settings","backend_state":"ready","trust":true,"kernel":"anaconda3","kernel_state":"idle","kernel_usage":{"cpu":0,"memory":88076288}}
